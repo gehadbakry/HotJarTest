@@ -1,0 +1,141 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+     <!-- GTM Code -->
+        <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-MTMF9M92');</script>
+
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Hotjar: Button Grid Test</title>
+  <style>
+    :root{
+      --bg:#f5f7fb;
+      --card:#ffffff;
+      --accent:#2563eb;
+      --muted:#6b7280;
+    }
+    html,body{height:100%;margin:0;font-family:Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; background:var(--bg); color:#111}
+    .wrap{min-height:100%;display:flex;align-items:center;justify-content:center;padding:2rem}
+    .card{width:720px;max-width:95%;background:var(--card);border-radius:12px;box-shadow:0 6px 30px rgba(16,24,40,0.08);padding:28px}
+    h1{margin:0 0 12px;font-size:20px}
+    p.lead{margin:0 0 20px;color:var(--muted)}
+
+    /* Grid */
+    .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+    button.test-btn{
+      display:flex;align-items:center;justify-content:center;gap:10px;padding:18px;border-radius:10px;border:1px solid rgba(0,0,0,0.06);background:linear-gradient(180deg,#fff,#f8fafc);cursor:pointer;font-weight:600;font-size:16px;transition:transform .12s ease,box-shadow .12s ease}
+    button.test-btn:active{transform:translateY(1px)}
+    button.test-btn:focus{outline:3px solid rgba(37,99,235,0.12);box-shadow:0 6px 18px rgba(37,99,235,0.12)}
+
+    /* visual variants */
+    .primary{border-color:rgba(37,99,235,0.12)}
+    .danger{border-color:rgba(239,68,68,0.12)}
+    .ghost{background:transparent;border:1px dashed rgba(0,0,0,0.06)}
+
+    /* small helper */
+    .meta{margin-top:14px;color:var(--muted);font-size:13px}
+    pre.log{background:#0b1220;color:#e6eef8;padding:10px;border-radius:8px;margin-top:14px;max-height:180px;overflow:auto;font-size:13px}
+  </style>
+</head>
+<body>
+
+    <!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MTMF9M92"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+ 
+  <div class="wrap">
+    <section class="card" aria-labelledby="title">
+      <h1 id="title">Hotjar Button Grid — Test Page</h1>
+      <p class="lead">Four buttons laid out in a 2×2 grid. Each button includes ids and <code>data-hj-*</code> attributes useful for Hotjar heatmaps and events. Run this file from VSCode Live Server or open in the browser.</p>
+
+      <div class="grid" role="group" aria-label="Hotjar test buttons">
+        <button id="btn-1" class="test-btn primary" data-hj-attr="cta-primary" data-test="signup-1" title="Sign up now">Sign up</button>
+        <button id="btn-2" class="test-btn" data-hj-attr="cta-secondary" data-test="learn-more" title="Learn more about product">Learn more</button>
+        <button id="btn-3" class="test-btn danger" data-hj-attr="cta-danger" data-test="delete-action" title="Danger action">Danger</button>
+        <button id="btn-4" class="test-btn ghost" data-hj-attr="cta-ghost" data-test="open-modal" title="Open modal">Open modal</button>
+      </div>
+
+      <div class="meta">Interaction log (for debugging):</div>
+      <pre id="log" class="log" aria-live="polite"></pre>
+
+    </section>
+  </div>
+
+  <script>
+    // Basic JS to capture events and fire custom events for Hotjar testing.
+    // Hotjar recognizes data-hj- attributes for recordings/heatmaps but you can also
+    // call hj('trigger', 'eventName') if Hotjar is installed on the page.
+
+    const logEl = document.getElementById('log');
+    function debug(...args){
+      const t = new Date().toLocaleTimeString();
+      logEl.textContent = (t + ' — ' + args.join(' ')) + '\n' + logEl.textContent;
+    }
+
+    // Add listeners to buttons
+    document.querySelectorAll('.test-btn').forEach(btn=>{
+      btn.addEventListener('click', e=>{
+        const id = btn.id;
+        const hjAttr = btn.getAttribute('data-hj-attr');
+        const test = btn.getAttribute('data-test');
+        debug('click', id, hjAttr || '', test || '');
+
+        // Example: Fire a Hotjar trigger if hj is available
+        try{
+          if (typeof hj === 'function') {
+            hj('trigger', hjAttr || id);
+            debug('hotjar trigger fired:', hjAttr || id);
+          }
+        } catch (err) {
+          // ignore
+        }
+
+        // small simulated behaviors for testing
+        if (id === 'btn-4') {
+          openModal();
+        }
+        if (id === 'btn-3') {
+          // simulate a confirm flow
+          const ok = confirm('This is a destructive action. Proceed?');
+          debug('confirm returned', ok);
+        }
+      });
+
+      // keyboard accessibility: enter / space
+      btn.addEventListener('keydown', e=>{
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          btn.click();
+        }
+      });
+    });
+
+    function openModal(){
+      debug('open modal simulated');
+      alert('Modal opened (simulated)');
+    }
+
+    // Helpful helper: log mouse moves for heatmap testing (optional)
+    // Toggle on/off by setting enableMouseLog to true
+    const enableMouseLog = false;
+    if (enableMouseLog){
+      document.addEventListener('mousemove', e=>{
+        // throttle by only logging every 200ms
+        if (window._lastMouse && Date.now()-window._lastMouse < 200) return;
+        window._lastMouse = Date.now();
+        const out = `mouse ${e.clientX},${e.clientY}`;
+        debug(out);
+      });
+    }
+
+    // Initial message
+    debug('page loaded');
+  </script>
+</body>
+</html>
