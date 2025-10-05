@@ -55,10 +55,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
       <p class="lead">Four buttons laid out in a 2×2 grid. Each button includes ids and <code>data-hj-*</code> attributes useful for Hotjar heatmaps and events. Run this file from VSCode Live Server or open in the browser.</p>
 
       <div class="grid" role="group" aria-label="Hotjar test buttons">
-        <button id="btn-1" class="test-btn primary" data-hj-attr="cta-primary" data-test="signup-1" title="Sign up now">Sign up</button>
-        <button id="btn-2" class="test-btn" data-hj-attr="cta-secondary" data-test="learn-more" title="Learn more about product">Learn more</button>
-        <button id="btn-3" class="test-btn danger" data-hj-attr="cta-danger" data-test="delete-action" title="Danger action">Danger</button>
-        <button id="btn-4" class="test-btn ghost" data-hj-attr="cta-ghost" data-test="open-modal" title="Open modal">Open modal</button>
+        <button id="btn-1" class="test-btn primary" data-hj-attr="cta-primary" data-test="signup-1" title="Event 1">Event 1</button>
+        <button id="btn-2" class="test-btn" data-hj-attr="cta-secondary" data-test="learn-more" title="Event 2">Event 2</button>
+        <button id="btn-3" class="test-btn danger" data-hj-attr="cta-danger" data-test="delete-action" title="Event 3">Event 3</button>
+        <button id="btn-4" class="test-btn ghost" data-hj-attr="cta-ghost" data-test="open-modal" title="Event 4">OEvent 4</button>
       </div>
 
       <div class="meta">Interaction log (for debugging):</div>
@@ -97,8 +97,10 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         }
 
         // small simulated behaviors for testing
-        if (id === 'btn-4') {
-          openModal();
+        if (id === 'btn-1') {
+          dataLayer.push({
+               'event': "hotjar_test"
+          })
         }
         if (id === 'btn-3') {
           // simulate a confirm flow
